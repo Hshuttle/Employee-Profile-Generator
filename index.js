@@ -1,32 +1,31 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
+const path = require("path");
+const ManagerClass = require("./lib/manager");
+const EmployeeClass = require("./lib/emplyee");
+const InternClass = require("./lib/intern");
+const EngineerClass = require("./lib/engieer");
 
 const managerquestions = [
   {
     type: "input",
     message: "What is your team manager's name?",
-    name: "managername",
+    name: "name",
   },
   {
     type: "input",
     message: "What is your team manager's id number?",
-    name: "managerid",
+    name: "id",
   },
   {
     type: "input",
     message: "What is your team manager's email?",
-    name: "manageremail",
+    name: "email",
   },
   {
     type: "input",
     message: "What is your team manager's office phone number?",
-    name: "managerphone",
-  },
-  {
-    type: "list",
-    message: "Would you like to add any additional team members?",
-    choices: ["Engineer", "Intern", "No one else to add"],
-    name: "manageradd",
+    name: "phone",
   },
 ];
 
@@ -34,28 +33,22 @@ const engineerquestions = [
   {
     type: "input",
     message: "What is your engineer's name?",
-    name: "engineername",
+    name: "name",
   },
   {
     type: "input",
     message: "What is your engineer's id number?",
-    name: "engineerid",
+    name: "id",
   },
   {
     type: "input",
     message: "What is your engineer's email?",
-    name: "engineeremail",
+    name: "email",
   },
   {
     type: "input",
     message: "What is your engineer's GitHub username?",
-    name: "engineergithub",
-  },
-  {
-    type: "list",
-    message: "Would you like to add any additional team members?",
-    choices: ["Engineer", "Intern", "No one else to add"],
-    name: "engineeradd",
+    name: "github",
   },
 ];
 
@@ -63,28 +56,31 @@ const internquestions = [
   {
     type: "input",
     message: "What is your intern's name?",
-    name: "internname",
+    name: "name",
   },
   {
     type: "input",
     message: "What is your intern's id number?",
-    name: "internid",
+    name: "id",
   },
   {
     type: "input",
     message: "What is your intern's email?",
-    name: "internemail",
+    name: "email",
   },
   {
     type: "input",
     message: "What is your interns school?",
-    name: "internschool",
+    name: "school",
   },
+];
+
+const Menu = [
   {
     type: "list",
     message: "Would you like to add any additional team members?",
     choices: ["Engineer", "Intern", "No one else to add"],
-    name: "internadd",
+    name: "add",
   },
 ];
 
@@ -92,21 +88,32 @@ console.log("");
 console.log("Please follow the prompts below to build your team!");
 console.log("");
 
-// inquirer.prompt(managerquestions).then((answers) => {
-//   const FILENAME =
-//     answers.managername.toLowerCase().split(" ").join("") + ".json";
-//   fs.writeFile(FILENAME, JSON.stringify(answers), (err) => {
-//     err ? console.error(err) : console.log("Successfully wrote to file");
-//   });
-// });
 function init() {
   inquirer.prompt(managerquestions).then((answers) => {
-    if ((answers.memberType = "Engineer")) {
-      inquirer.prompt(engineerquestions).then((answers) => {});
-    } else if ((answers.memberType = "Intern")) {
-      inquirer.prompt(internquestions).then((answers) => {});
+    addMenu();
+  });
+}
+
+function addMenu() {
+  inquirer.prompt(Menu).then((answers) => {
+    if (answers.add === "Engineer") {
+      initEngineer();
+    } else if (answers.add === "Intern") {
+      initIntern();
     } else {
+      return;
     }
+  });
+}
+
+function initEngineer() {
+  inquirer.prompt(engineerquestions).then((answers) => {
+    addMenu();
+  });
+}
+function initIntern() {
+  inquirer.prompt(internquestions).then((answers) => {
+    addMenu();
   });
 }
 
