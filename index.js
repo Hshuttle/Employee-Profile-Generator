@@ -1,11 +1,12 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
 const path = require("path");
-const ManagerClass = require("./lib/manager");
-const EmployeeClass = require("./lib/emplyee");
-const InternClass = require("./lib/intern");
-const EngineerClass = require("./lib/engieer");
-
+const Manager = require("./lib/Manager");
+const Employee = require("./lib/Employee");
+const Intern = require("./lib/Intern");
+const Engineer = require("./lib/Engineer");
+const GenerateHTML = require("./src/htmlgenerator");
+const Team = [];
 const managerquestions = [
   {
     type: "input",
@@ -90,6 +91,13 @@ console.log("");
 
 function init() {
   inquirer.prompt(managerquestions).then((answers) => {
+    const manager = new Manager(
+      answers.name,
+      answers.id,
+      answers.email,
+      answers.phone
+    );
+    Team.push(manager);
     addMenu();
   });
 }
@@ -101,18 +109,35 @@ function addMenu() {
     } else if (answers.add === "Intern") {
       initIntern();
     } else {
-      return;
+      fs.writeFileSync(
+        path.join(__dirname, "/dist/", "test.html"),
+        GenerateHTML(Team)
+      );
     }
   });
 }
 
 function initEngineer() {
   inquirer.prompt(engineerquestions).then((answers) => {
+    const engineer = new Engineer(
+      answers.name,
+      answers.id,
+      answers.email,
+      answers.github
+    );
+    Team.push(engineer);
     addMenu();
   });
 }
 function initIntern() {
   inquirer.prompt(internquestions).then((answers) => {
+    const intern = new Intern(
+      answers.name,
+      answers.id,
+      answers.email,
+      answers.school
+    );
+    Team.push(intern);
     addMenu();
   });
 }
